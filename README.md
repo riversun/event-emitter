@@ -44,3 +44,9 @@ only() method can limit the event listener function that receives events to only
  
 Only one listener is registered per "listenerName" even if called multiple times.
 If the same listenerName is set for listener, the old listener will be removed.
+
+# run tests
+
+```
+npm test
+```
