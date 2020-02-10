@@ -9,7 +9,7 @@ MIT License
 # install
 
 ```
-npm install eventemit
+npm install @riversun/event-emitter
 ```
 
 # usage

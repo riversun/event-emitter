@@ -9,7 +9,7 @@ module.exports = (env, argv) => {
     const conf = {
         mode: 'development',
         entry: {
-            eventemit: ['./src/event-emitter.js'],
+            "event-emitter": ['./src/event-emitter.js'],
         },
         output: {
             path: path.join(__dirname, 'dist'),

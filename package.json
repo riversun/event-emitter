@@ -1,8 +1,8 @@
 {
-  "name": "eventemit",
-  "version": "1.0.0",
-  "description": "",
-  "main": "dist/eventemit.min.js",
+  "name": "@riversun/event-emitter",
+  "version": "1.0.2",
+  "description": "Helper class for sending and receiving events.\r - Register a listener to receive events.\r - Also, when an event occurs, call the event to the Listener registered in advance using the emit method",
+  "main": "dist/event-emitter.min.js",
   "scripts": {
     "release": "npm run test & webpack --config webpack.config.js --mode production",
     "test": "jest -i",
@@ -31,5 +31,8 @@
   },
   "dependencies": {
     "core-js": "^3.6.4"
+  },
+  "directories": {
+    "test": "test"
   }
 }
