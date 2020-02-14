@@ -1,8 +1,8 @@
 {
   "name": "@riversun/event-emitter",
-  "version": "1.0.2",
+  "version": "1.1.0",
   "description": "Helper class for sending and receiving events.\r - Register a listener to receive events.\r - Also, when an event occurs, call the event to the Listener registered in advance using the emit method",
-  "main": "dist/event-emitter.min.js",
+  "main": "src/event-emitter.js",
   "scripts": {
     "release": "npm run test & webpack --config webpack.config.js --mode production",
     "test": "jest -i",
@@ -22,16 +22,11 @@
     "@babel/core": "^7.8.4",
     "@babel/preset-env": "^7.8.4",
     "babel-jest": "^25.1.0",
-    "babel-loader": "^8.0.6",
     "cross-env": "^7.0.0",
     "jest": "^25.1.0",
-    "terser-webpack-plugin": "^1.4.3",
-    "webpack": "^4.41.5",
-    "webpack-cli": "^3.3.10"
+    "terser-webpack-plugin": "^1.4.3"
   },
-  "dependencies": {
-    "core-js": "^3.6.4"
-  },
+  "dependencies": {},
   "directories": {
     "test": "test"
   }
