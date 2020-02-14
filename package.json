@@ -4,7 +4,6 @@
   "description": "Helper class for sending and receiving events.\r - Register a listener to receive events.\r - Also, when an event occurs, call the event to the Listener registered in advance using the emit method",
   "main": "src/event-emitter.js",
   "scripts": {
-    "release": "npm run test & webpack --config webpack.config.js --mode production",
     "test": "jest -i",
     "test:coverage": "npm run test -- --coverage"
   },
