@@ -1,4 +1,7 @@
 # @riversun/event-emitter
+[![npm version](https://badge.fury.io/js/%40riversun%2Fevent-emitter.svg)](https://badge.fury.io/js/%40riversun%2Fevent-emitter)
+[![CircleCI](https://circleci.com/gh/riversun/event-emitter.svg?style=shield)](https://circleci.com/gh/riversun/event-emitter)
+[![codecov](https://codecov.io/gh/riversun/event-emitter/branch/master/graph/badge.svg)](https://codecov.io/gh/riversun/event-emitter)
 
 Helper class for sending and receiving events.
 - Register a listener to receive events.
