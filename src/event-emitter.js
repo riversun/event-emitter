@@ -9,22 +9,22 @@
  */
 export default class EventEmitter {
 
-  constructor(eventNames) {
+  constructor(eventTypes) {
 
-    //  key:eventName,
+    //  key:eventType,
     //  value:EventListenerList
     this.onListeners = new Map();
 
-    // key:eventName
+    // key:eventType
     // value:EventListenerMap
     this.onlyListeners = new Map();
 
 
-    //prepare listenerLists related to the eventName
-    if (eventNames) {
-      for (const eventName of eventNames) {
+    //prepare listenerLists related to the eventType
+    if (eventTypes) {
+      for (const eventType of eventTypes) {
         const listenerList = new EventListenerList();
-        this.onListeners.set(eventName, listenerList);
+        this.onListeners.set(eventType, listenerList);
       }
     }
 
@@ -33,19 +33,19 @@ export default class EventEmitter {
 
 
   /**
-   * Set eventName you want to receive and the listener function to be callbacked from #emit method
-   *  (This eventName will never fire unless called with emit)
+   * Set eventType you want to receive and the listener function to be callbacked from #emit method
+   *  (This eventType will never fire unless called with emit)
    *
-   * @param {string} eventName
+   * @param {string} eventType
    * @param {function} listenerFunc
    */
-  on(eventName, listenerFunc) {
+  on(eventType, listenerFunc) {
 
-    let listenerList = this.onListeners.get(eventName);
+    let listenerList = this.onListeners.get(eventType);
 
     if (!listenerList) {
       listenerList = new EventListenerList();
-      this.onListeners.set(eventName, listenerList);
+      this.onListeners.set(eventType, listenerList);
     }
     listenerList.addListenerFunc(listenerFunc);
   }
@@ -53,17 +53,17 @@ export default class EventEmitter {
   /**
    * Only one listener is registered per "listenerName" even if called multiple times.
    * If the same listenerName is set for listener, the old listener will be removed.
-   * @param {string} eventName
+   * @param {string} eventType
    * @param {string} listenerName
    * @param  {function} listenerFunc
    */
-  only(eventName, listenerName, listenerFunc) {
+  only(eventType, listenerName, listenerFunc) {
 
-    let listenerMap = this.onlyListeners.get(eventName);
+    let listenerMap = this.onlyListeners.get(eventType);
 
     if (!listenerMap) {
       listenerMap = new EventListenerMap();
-      this.onlyListeners.set(eventName, listenerMap);
+      this.onlyListeners.set(eventType, listenerMap);
     }
 
     listenerMap.putListenerFunc(listenerName, listenerFunc);
@@ -81,46 +81,46 @@ export default class EventEmitter {
 
   /**
    * Emit data to listeners (callback functions) registered with the "on()" method.
-   * @param {string} eventName
+   * @param {string} eventType
    * @param {object} data
    */
-  emit(eventName, data) {
+  emit(eventType, data) {
 
-    const listenerList = this.onListeners.get(eventName);
+    const listenerList = this.onListeners.get(eventType);
 
     // fire "on" listener
     if (listenerList) {
 
-      // Add "eventName" into data
-      data.eventName = eventName;
+      // Add "eventType" into data
+      data.eventType = eventType;
 
       listenerList.callListenerFunc(data);
     }
 
     // fire "only" listener
-    const listenerMap = this.onlyListeners.get(eventName);
+    const listenerMap = this.onlyListeners.get(eventType);
     if (listenerMap) {
       // Call the listener registered with "only" method
       listenerMap.callListenerFunc(data);
     }
 
     for (const childEventEmitter of this.childEventEmitters) {
-      childEventEmitter.emit(eventName, data);
+      childEventEmitter.emit(eventType, data);
     }
   }
 
   /**
-   * Returns true if at least one ListenerFunction that receives the event specified by "eventName" is registered
-   * @param {string} eventName
+   * Returns true if at least one ListenerFunction that receives the event specified by "eventType" is registered
+   * @param {string} eventType
    * @returns {boolean}
    */
-  hasListenerFuncs(eventName) {
+  hasListenerFuncs(eventType) {
 
-    //  key:eventName,
+    //  key:eventType,
     //  value:EventListenerList
-    if (this.onListeners.has(eventName)) {
+    if (this.onListeners.has(eventType)) {
 
-      const listenerList = this.onListeners.get(eventName);
+      const listenerList = this.onListeners.get(eventType);
 
       if (listenerList && listenerList.hasListenerFunc()) {
         return true;
@@ -128,7 +128,7 @@ export default class EventEmitter {
     }
 
     for (const childEventEmitter of this.childEventEmitters) {
-      const childEventEmitterHasListenerFuncs = childEventEmitter.hasListenerFuncs(eventName);
+      const childEventEmitterHasListenerFuncs = childEventEmitter.hasListenerFuncs(eventType);
       if (childEventEmitterHasListenerFuncs) {
         return true;
       }

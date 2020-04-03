@@ -17,6 +17,7 @@ describe('EventEmitter', () => {
       const eventEmitter = new EventEmitter();
 
       eventEmitter.on('testEvent', data => {
+        expect(data.eventType).toBe('testEvent');
         expect(data.testKey).toBe('testValue');
       });
 
