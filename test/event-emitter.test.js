@@ -1,139 +1,182 @@
-import {default as EventEmitter} from '../src/event-emitter';
+import { default as EventEmitter } from '../src/event-emitter';
 
 describe('EventEmitter', () => {
 
-    describe('emit()/on()', () => {
+  describe('constructor', () => {
 
-        test('Set callback func by on() and emit().', () => {
+    test('default', () => {
+      const eventEmitter = new EventEmitter(['testEvent', 'testEvent2']);
+      expect(eventEmitter.hasListenerFuncs('testEvent')).toBe(false);
+    });
+  });
 
-            const eventEmitter = new EventEmitter();
+  describe('emit()/on()', () => {
 
-            eventEmitter.on('testEvent', data => {
-                expect(data.testKey).toBe('testValue');
-            });
+    test('Set callback func by on() and emit().', () => {
 
-            eventEmitter.emit('testEvent', {testKey: 'testValue'});
-        });
+      const eventEmitter = new EventEmitter();
 
-        test('Set multiple callback funcs by on() and emit().', () => {
+      eventEmitter.on('testEvent', data => {
+        expect(data.testKey).toBe('testValue');
+      });
 
-            const eventEmitter = new EventEmitter();
-
-            let numOfCallbacks = 0;
-
-            const callbackFunc = data => {
-                numOfCallbacks++;
-
-            };
-
-            for (let i = 0; i < 10; i++) {
-                eventEmitter.on('testEvent', callbackFunc);
-            }
-
-            eventEmitter.emit('testEvent', {testKey: 'testValue'});
-
-            expect(numOfCallbacks).toBe(10);
-        });
+      eventEmitter.emit('testEvent', { testKey: 'testValue' });
     });
 
-    describe('only()', () => {
-        test('Make sure that there is only one callback even if you set several listeners', () => {
+    test('Set multiple callback funcs by on() and emit().', () => {
 
-            const eventEmitter = new EventEmitter();
+      const eventEmitter = new EventEmitter();
 
-            let numOfCallbacks = 0;
+      let numOfCallbacks = 0;
 
-            const callbackFunc = data => {
-                numOfCallbacks++;
-            };
+      const callbackFunc = data => {
+        numOfCallbacks++;
 
-            for (let i = 0; i < 10; i++) {
-                eventEmitter.only('testEvent', 'unique-listener', callbackFunc);
-            }
+      };
 
-            eventEmitter.emit('testEvent', {testKey: 'testValue'});
+      for (let i = 0; i < 10; i++) {
+        eventEmitter.on('testEvent', callbackFunc);
+      }
 
-            expect(numOfCallbacks).toBe(1);
-        });
+      eventEmitter.emit('testEvent', { testKey: 'testValue' });
+
+      expect(numOfCallbacks).toBe(10);
     });
 
-    describe('pipe()', () => {
 
-        test('Child listener can receive events from parent EventEmitter.', () => {
+  });
 
-            const parentEmitter = new EventEmitter();
-            const childEmitter = new EventEmitter();
+  describe('only()', () => {
+    test('Make sure that there is only one callback even if you set several listeners', () => {
 
-            parentEmitter.pipe(childEmitter);
+      const eventEmitter = new EventEmitter();
 
-            let numOfCallbacks = 0;
+      let numOfCallbacks = 0;
 
-            childEmitter.on('testEvent', data => {
-                numOfCallbacks++;
-                expect(data.testKey).toBe('testValue');
-            });
+      const callbackFunc = data => {
+        numOfCallbacks++;
+      };
 
-            parentEmitter.on('testEvent', data => {
-                numOfCallbacks++;
-                expect(data.testKey).toBe('testValue');
-            });
+      for (let i = 0; i < 10; i++) {
+        eventEmitter.only('testEvent', 'unique-listener', callbackFunc);
+      }
 
-            for (let i = 0; i < 10; i++) {
-                parentEmitter.only('testEvent', 'unique-listener', data => {
-                    numOfCallbacks++;
-                    expect(data.testKey).toBe('testValue');
-                });
-            }
+      eventEmitter.emit('testEvent', { testKey: 'testValue' });
+
+      expect(numOfCallbacks).toBe(1);
+    });
+  });
 
 
-            parentEmitter.emit('testEvent', {testKey: 'testValue'});
+  describe('hasListenerFuncs()', () => {
 
-            expect(numOfCallbacks).toBe(3);
-        });
+    test('has listener', () => {
+      const parentEmitter = new EventEmitter();
+      parentEmitter.on('testEvent', () => {
+      });
+
+      expect(parentEmitter.hasListenerFuncs('testEvent')).toBe(true);
     });
 
-    describe('clearAll()', () => {
+    test('has listener on children', () => {
+      const parentEmitter = new EventEmitter();
+      const childEmitter = new EventEmitter();
 
-        test('Make sure listeners are definitely gone by clearAll() method', () => {
-            const parentEmitter = new EventEmitter();
-            const childEmitter = new EventEmitter();
+      parentEmitter.pipe(childEmitter);
+      childEmitter.on('testEvent', () => {
+      });
+      expect(parentEmitter.hasListenerFuncs('testEvent')).toBe(true);
+    });
+  });
 
-            parentEmitter.pipe(childEmitter);
+  describe('pipe()', () => {
 
-            let numOfCallbacks = 0;
+    test('Child listener can receive events from parent EventEmitter.', () => {
 
-            childEmitter.on('testEvent', data => {
-                numOfCallbacks++;
-                expect(data.testKey).toBe('testValue');
-            });
+      const parentEmitter = new EventEmitter();
+      const childEmitter = new EventEmitter();
 
-            parentEmitter.on('testEvent', data => {
-                numOfCallbacks++;
-                expect(data.testKey).toBe('testValue');
-            });
+      parentEmitter.pipe(childEmitter);
 
-            for (let i = 0; i < 10; i++) {
-                parentEmitter.only('testEvent', 'unique-listener', data => {
-                    numOfCallbacks++;
-                    expect(data.testKey).toBe('testValue');
-                });
-            }
+      let numOfCallbacks = 0;
 
-            parentEmitter.emit('testEvent', {testKey: 'testValue'});
+      childEmitter.on('testEvent', data => {
+        numOfCallbacks++;
+        expect(data.testKey).toBe('testValue');
+      });
 
-            expect(numOfCallbacks).toBe(3);
+      parentEmitter.on('testEvent', data => {
+        numOfCallbacks++;
+        expect(data.testKey).toBe('testValue');
+      });
 
-            parentEmitter.clearAll();
-
-            numOfCallbacks = 0;
-
-            parentEmitter.emit('testEvent', {testKey: 'testValue'});
-
-            expect(numOfCallbacks).toBe(0);
-
-
+      for (let i = 0; i < 10; i++) {
+        parentEmitter.only('testEvent', 'unique-listener', data => {
+          numOfCallbacks++;
+          expect(data.testKey).toBe('testValue');
         });
+      }
 
-    });//describe
+
+      parentEmitter.emit('testEvent', { testKey: 'testValue' });
+
+      expect(numOfCallbacks).toBe(3);
+    });
+
+    test('When a parent does not subscribe to an event name, but a child emitter does subscribe to that event name, make sure that the child emitter you pipe fires correctly', (done) => {
+
+      const parentEmitter = new EventEmitter();
+      const childEmitter = new EventEmitter();
+      parentEmitter.pipe(childEmitter);
+      childEmitter.on('testEvent', (data) => {
+        done();
+      });
+      parentEmitter.emit('testEvent', { message: 'test' });
+    });
+  });
+
+  describe('clearAll()', () => {
+
+    test('Make sure listeners are definitely gone by clearAll() method', () => {
+      const parentEmitter = new EventEmitter();
+      const childEmitter = new EventEmitter();
+
+      parentEmitter.pipe(childEmitter);
+
+      let numOfCallbacks = 0;
+
+      childEmitter.on('testEvent', data => {
+        numOfCallbacks++;
+        expect(data.testKey).toBe('testValue');
+      });
+
+      parentEmitter.on('testEvent', data => {
+        numOfCallbacks++;
+        expect(data.testKey).toBe('testValue');
+      });
+
+      for (let i = 0; i < 10; i++) {
+        parentEmitter.only('testEvent', 'unique-listener', data => {
+          numOfCallbacks++;
+          expect(data.testKey).toBe('testValue');
+        });
+      }
+
+      parentEmitter.emit('testEvent', { testKey: 'testValue' });
+
+      expect(numOfCallbacks).toBe(3);
+
+      parentEmitter.clearAll();
+
+      numOfCallbacks = 0;
+
+      parentEmitter.emit('testEvent', { testKey: 'testValue' });
+
+      expect(numOfCallbacks).toBe(0);
+
+
+    });
+
+  });//describe
 
 });

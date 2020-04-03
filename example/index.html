@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>@riversun/event-emitter example</title>
+</head>
+<body>
+<button id="btn">Click to fire original event</button>
+<div id="msg"></div>
+<script src="event-emitter.js"></script>
+<script>
+  const eventEmitter = new EventEmitter();
+
+  eventEmitter.on('testevent', (data) => {
+    document.querySelector('#msg').innerHTML = `Event fired!<br>data=${JSON.stringify(data)}`;
+  });
+
+  document.querySelector('#btn').addEventListener('click', (e) => {
+    eventEmitter.emit('testevent', { message: 'example message' });
+  });
+
+  const childEmitter=new EventEmitter();
+  eventEmitter.pipe(childEmitter);
+
+  childEmitter.on('testevent',(data)=>{
+    console.log(`Received at childEventEmitter : ${JSON.stringify(data)}` );
+  });
+</script>
+</body>
+</html>

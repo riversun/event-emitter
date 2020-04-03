@@ -3,3 +3,8 @@ test
 gulpfile.js
 node_modules
 .DS_Store
+example
+docs
+src
+coverage
+
