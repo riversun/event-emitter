@@ -101,6 +101,9 @@ export default class EventEmitter {
     const listenerMap = this.onlyListeners.get(eventType);
     if (listenerMap) {
       // Call the listener registered with "only" method
+
+      // Add "eventType" into data
+      data.eventType = eventType;
       listenerMap.callListenerFunc(data);
     }
 
@@ -185,8 +188,16 @@ export class EventListenerList {
 
   callListenerFunc(data) {
     for (const listenerFunc of this.listenerFuncs) {
-      listenerFunc(data);
+      if (this.typeOf(listenerFunc) === 'Function') {
+        listenerFunc(data);
+      } else {
+        throw Error(`[@riversun/event-emitter] listenerFunction you set is not a function. listenerFunction:"${listenerFunc}".Check args of #only method or #on method.`);
+      }
     }
+  }
+
+  typeOf(obj) {
+    return Object.prototype.toString.call(obj).slice(8, -1);
   }
 
 }
@@ -214,8 +225,17 @@ export class EventListenerMap {
 
   callListenerFunc(data) {
     for (const listenerFunc of this.listenerFuncMap.values()) {
-      listenerFunc(data);
+      if (this.typeOf(listenerFunc) === 'Function') {
+        listenerFunc(data);
+      } else {
+        throw Error(`[@riversun/event-emitter] listenerFunction you set is not a function. listenerFunction:"${listenerFunc}".Check args of #only method or #on method.`);
+      }
     }
   }
 
+  typeOf(obj) {
+    return Object.prototype.toString.call(obj).slice(8, -1);
+  }
 }
+
+
