@@ -1,9 +1,23 @@
+## Classes
+
+<dl>
+<dt><a href="#EventListenerList">EventListenerList</a></dt>
+<dd><p>A sequential list containing event listeners(callback functions)</p>
+</dd>
+<dt><a href="#EventListenerMap">EventListenerMap</a></dt>
+<dd><p>Map that stores listeners(callback functions) with the specific key</p>
+</dd>
+</dl>
+
 ## Functions
 
 <dl>
 <dt><a href="#on">on(eventType, listenerFunc)</a></dt>
 <dd><p>Set eventType you want to receive and the listener function to be callbacked from #emit method
  (This eventType will never fire unless called with emit)</p>
+</dd>
+<dt><a href="#removeListener">removeListener(eventType, listenerFunc)</a></dt>
+<dd><p>Remove specified event listener</p>
 </dd>
 <dt><a href="#only">only(eventType, listenerName, listenerFunc)</a></dt>
 <dd><p>Only one listener is registered per &quot;listenerName&quot; even if called multiple times.
@@ -36,6 +50,18 @@ Set eventType you want to receive and the listener function to be callbacked fro
 | --- | --- |
 | eventType | <code>string</code> | 
 | listenerFunc | <code>function</code> | 
+
+<a name="removeListener"></a>
+
+## removeListener(eventType, listenerFunc)
+Remove specified event listener
+
+**Kind**: global function  
+
+| Param |
+| --- |
+| eventType | 
+| listenerFunc | 
 
 <a name="only"></a>
 

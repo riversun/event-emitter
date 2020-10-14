@@ -24,6 +24,7 @@ describe('EventEmitter', () => {
       eventEmitter.emit('testEvent', { testKey: 'testValue' });
     });
 
+
     test('Set multiple callback funcs by on() and emit().', () => {
 
       const eventEmitter = new EventEmitter();
@@ -87,6 +88,21 @@ describe('EventEmitter', () => {
       childEmitter.on('testEvent', () => {
       });
       expect(parentEmitter.hasListenerFuncs('testEvent')).toBe(true);
+    });
+  });
+
+  describe('removeListener()', () => {
+    test('Remove listener', () => {
+
+      const eventEmitter = new EventEmitter();
+
+      const func = data => {
+        throw Error('Removed listner called')
+      };
+
+      eventEmitter.on('testEvent', func);
+      eventEmitter.removeListener('testEvent', func);
+      eventEmitter.emit('testEvent', { testKey: 'testValue' });
     });
   });
 

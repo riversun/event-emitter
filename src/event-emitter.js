@@ -51,6 +51,19 @@ export default class EventEmitter {
   }
 
   /**
+   * Remove specified event listener
+   * @param eventType
+   * @param listenerFunc
+   */
+  removeListener(eventType, listenerFunc) {
+    let listenerList = this.onListeners.get(eventType);
+
+    if (listenerList) {
+      listenerList.removeListener(listenerFunc);
+    }
+  }
+
+  /**
    * Only one listener is registered per "listenerName" even if called multiple times.
    * If the same listenerName is set for listener, the old listener will be removed.
    * @param {string} eventType
@@ -194,6 +207,18 @@ export class EventListenerList {
         throw Error(`[@riversun/event-emitter] listenerFunction you set is not a function. listenerFunction:"${listenerFunc}".Check args of #only method or #on method.`);
       }
     }
+  }
+
+  removeListener(listenerFunc) {
+    this.removeArrayItemOnce(this.listenerFuncs, listenerFunc);
+  }
+
+  removeArrayItemOnce(arr, value) {
+    var index = arr.indexOf(value);
+    if (index > -1) {
+      arr.splice(index, 1);
+    }
+    return arr;
   }
 
   typeOf(obj) {
