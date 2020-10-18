@@ -56,8 +56,6 @@ npm test
 
 # API details
 
-## Functions
-
 <dl>
 <dt><a href="#on">on(eventType, listenerFunc)</a></dt>
 <dd><p>Set eventType you want to receive and the listener function to be callbacked from #emit method
@@ -76,6 +74,15 @@ When the specified emitter is received a callback, the specified emitter also em
 </dd>
 <dt><a href="#emit">emit(eventType, data)</a></dt>
 <dd><p>Emit data to listeners (callback functions) registered with the &quot;on()&quot; method.</p>
+</dd>
+<dt><a href="#getAllListeners">getAllListeners()</a> ⇒ <code>Object</code></dt>
+<dd><p>Returns all listeners like below.
+   result={
+      testEvent: {
+        listeners: [ [Function (anonymous)] ],
+        childEventEmitters: [ { childEmitterIdx: 0, listeners: [Array] } ]
+      }
+    }</p>
 </dd>
 <dt><a href="#hasListenerFuncs">hasListenerFuncs(eventType)</a> ⇒ <code>boolean</code></dt>
 <dd><p>Returns true if at least one ListenerFunction that receives the event specified by &quot;eventType&quot; is registered</p>
@@ -148,6 +155,18 @@ Emit data to listeners (callback functions) registered with the "on()" method.
 | eventType | <code>string</code> | 
 | data | <code>object</code> | 
 
+<a name="getAllListeners"></a>
+
+## getAllListeners() ⇒ <code>Object</code>
+Returns all listeners like below.
+   result={
+      testEvent: {
+        listeners: [ [Function (anonymous)] ],
+        childEventEmitters: [ { childEmitterIdx: 0, listeners: [Array] } ]
+      }
+    }
+
+**Kind**: global function  
 <a name="hasListenerFuncs"></a>
 
 ## hasListenerFuncs(eventType) ⇒ <code>boolean</code>

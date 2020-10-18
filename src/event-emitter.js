@@ -126,6 +126,49 @@ export default class EventEmitter {
   }
 
   /**
+   * Returns all listeners like below.
+   result={
+      testEvent: {
+        listeners: [ [Function (anonymous)] ],
+        childEventEmitters: [ { childEmitterIdx: 0, listeners: [Array] } ]
+      }
+    }
+   * @returns {{}}
+   */
+  getAllListeners() {
+    const result = {};
+    const onListeners = this.onListeners;
+
+    onListeners.forEach(function(value, key) {
+      const eventType = key;
+      const eventListenerList = value;
+      const listeners = eventListenerList.getAllListeners();// return array
+      if (!result[eventType]) {
+        result[eventType] = {};
+      }
+      result[eventType]['listeners'] = listeners;
+    });
+    let idx = 0;
+    for (const childEventEmitter of this.childEventEmitters) {
+      childEventEmitter.onListeners.forEach(function(value, key) {
+        const eventType = key;
+        const eventListenerList = value;
+        const listeners = eventListenerList.getAllListeners();// return array
+        if (!result[eventType]) {
+          result[eventType] = {};
+        }
+        if (!result[eventType]['childEventEmitters']) {
+          result[eventType]['childEventEmitters'] = [];
+        }
+        result[eventType]['childEventEmitters'].push({ childEmitterIdx: idx, listeners });
+      });
+      idx++;
+    }
+    return result;
+
+  }
+
+  /**
    * Returns true if at least one ListenerFunction that receives the event specified by "eventType" is registered
    * @param {string} eventType
    * @returns {boolean}
@@ -185,6 +228,10 @@ export class EventListenerList {
 
   clearAll() {
     this.listenerFuncs = [];
+  }
+
+  getAllListeners() {
+    return this.listenerFuncs;
   }
 
   hasListenerFunc() {

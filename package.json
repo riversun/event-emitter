@@ -1,6 +1,6 @@
 {
   "name": "@riversun/event-emitter",
-  "version": "1.3.0",
+  "version": "1.4.0",
   "description": "Helper class for sending and receiving events.\r - Register a listener to receive events.\r - Also, when an event occurs, call the event to the Listener registered in advance using the emit method",
   "main": "lib/event-emitter.js",
   "scripts": {

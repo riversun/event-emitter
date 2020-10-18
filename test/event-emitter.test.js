@@ -48,6 +48,57 @@ describe('EventEmitter', () => {
 
   });
 
+  describe('getAllListeners()', () => {
+
+    test('getAllListeners.', () => {
+
+      const eventEmitter = new EventEmitter();
+
+      const allListeners0 = eventEmitter.getAllListeners();
+      expect(allListeners0.testEvent).toBeFalsy();
+
+      eventEmitter.on('testEvent', data => {
+        expect(data.eventType).toBe('testEvent');
+        expect(data.testKey).toBe('testValue');
+      });
+
+      const allListeners = eventEmitter.getAllListeners();
+      expect(allListeners.testEvent).toBeTruthy();
+      expect(allListeners.testEvent.listeners.length).toBe(1);
+      eventEmitter.emit('testEvent', { testKey: 'testValue' });
+    });
+
+    test('with child emitters.', () => {
+
+      const parentEmitter = new EventEmitter();
+      const childEmitter = new EventEmitter();
+
+      parentEmitter.pipe(childEmitter);
+
+      let numOfCallbacks = 0;
+
+      childEmitter.on('testEvent', data => {
+        numOfCallbacks++;
+        expect(data.testKey).toBe('testValue');
+      });
+
+      parentEmitter.on('testEvent', data => {
+        numOfCallbacks++;
+        expect(data.testKey).toBe('testValue');
+      });
+      const allListeners = parentEmitter.getAllListeners();
+      // allListeners.testEvent.childEventEmitters should be " [ { childEmitterIdx: 0, listeners: [ [Function (anonymous)] ] } ]"
+      expect(allListeners.testEvent).toBeTruthy();
+      expect(allListeners.testEvent.childEventEmitters).toBeTruthy();
+      expect(allListeners.testEvent.childEventEmitters.length).toBe(1);
+      expect(allListeners.testEvent.childEventEmitters[0].listeners).toBeTruthy();
+      expect(allListeners.testEvent.childEventEmitters[0].listeners.length).toBe(1);
+
+      parentEmitter.emit('testEvent', { testKey: 'testValue' });
+
+    });
+  });
+
   describe('only()', () => {
     test('Make sure that there is only one callback even if you set several listeners', () => {
 
