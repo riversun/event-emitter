@@ -24,7 +24,7 @@
 <label for="nav-trigger" class="overlay"></label>
 
 <nav>
-    <li class="nav-link nav-home-link"><a href="index.html">Home</a></li><li class="nav-heading">Classes</li><li class="nav-heading"><span class="nav-item-type type-class">C</span><span class="nav-item-name"><a href="EventListenerList.html">EventListenerList</a></span></li><li class="nav-heading"><span class="nav-item-type type-class">C</span><span class="nav-item-name"><a href="EventListenerMap.html">EventListenerMap</a></span></li><li class="nav-heading"><span class="nav-item-type type-class">C</span><span class="nav-item-name"><a href="module.exports.html">exports</a></span></li><li class="nav-heading"><a href="global.html">Globals</a></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#clearAll">clearAll</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#emit">emit</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#getAllListeners">getAllListeners</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#hasListenerFuncs">hasListenerFuncs</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#on">on</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#only">only</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#pipe">pipe</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#removeListener">removeListener</a></span></li>
+    <li class="nav-link nav-home-link"><a href="index.html">Home</a></li><li class="nav-heading">Classes</li><li class="nav-heading"><span class="nav-item-type type-class">C</span><span class="nav-item-name"><a href="EventListenerList.html">EventListenerList</a></span></li><li class="nav-heading"><span class="nav-item-type type-class">C</span><span class="nav-item-name"><a href="EventListenerMap.html">EventListenerMap</a></span></li><li class="nav-heading"><span class="nav-item-type type-class">C</span><span class="nav-item-name"><a href="module.exports.html">exports</a></span></li><li class="nav-heading"><a href="global.html">Globals</a></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#addOnIntercepterFunc">addOnIntercepterFunc</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#clearAll">clearAll</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#emit">emit</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#getAllListeners">getAllListeners</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#getAllOnIntercepterFuncs">getAllOnIntercepterFuncs</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#hasListenerFuncs">hasListenerFuncs</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#on">on</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#only">only</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#pipe">pipe</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#removeListener">removeListener</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#removeOnIntercepterFunc">removeOnIntercepterFunc</a></span></li>
 </nav>
 
 <div id="main">
@@ -70,8 +70,9 @@ export default class EventEmitter {
     }
 
     this.childEventEmitters = [];
-  }
 
+    this.onIntercepterFuncs = {};
+  }
 
   /**
    * Set eventType you want to receive and the listener function to be callbacked from #emit method
@@ -89,6 +90,16 @@ export default class EventEmitter {
       this.onListeners.set(eventType, listenerList);
     }
     listenerList.addListenerFunc(listenerFunc);
+
+    // notify callback functions adding listenerFunc for eventType by on method.
+    if (this.onIntercepterFuncs) {
+      for (let [key, value] of Object.entries(this.onIntercepterFuncs)) {
+        const onIntercepterFuncname = key;
+        const onIntercepterFunc = value;
+        onIntercepterFunc({ eventType, func: listenerFunc, onIntercepterFuncname });
+      }
+    }
+
   }
 
   /**
@@ -256,6 +267,40 @@ export default class EventEmitter {
 
     this.childEventEmitters = [];
   }
+
+
+  /**
+   * Add callback func(s) to notify when calling on() method.
+   * @param funcName
+   * @param func
+   */
+  addOnIntercepterFunc(funcName, func) {
+    if (this.onIntercepterFuncs[funcName]) {
+      throw Error(`Always registered intercepter func "${funcName}".`)
+    }
+    this.onIntercepterFuncs[funcName] = func;
+  }
+
+  /**
+   * Add callback func to notify when calling on() method.
+   * @param funcName
+   */
+  removeOnIntercepterFunc(funcName) {
+    delete this.onIntercepterFuncs[funcName];
+  }
+
+  /**
+   * Returns callback func and func name to notify when calling on() method.
+   */
+  getAllOnIntercepterFuncs() {
+    const resultArray = [];
+    for (let [key, value] of Object.entries(this.onIntercepterFuncs)) {
+      const onIntercepterFuncname = key;
+      const onIntercepterFunc = value;
+      resultArray.push({ funcName: onIntercepterFuncname, func: onIntercepterFunc });
+    }
+    return resultArray;
+  }
 }
 
 /**
@@ -313,6 +358,7 @@ export class EventListenerList {
     return Object.prototype.toString.call(obj).slice(8, -1);
   }
 
+
 }
 
 /**
@@ -364,7 +410,7 @@ export class EventListenerMap {
 <br class="clear">
 
 <footer>
-    Generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.6</a> on Sun Oct 18 2020 19:04:35 GMT+0900 (日本標準時) using the Minami theme.
+    Generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.6</a> on Sat Oct 31 2020 17:35:58 GMT+0900 (日本標準時) using the Minami theme.
 </footer>
 
 <script>prettyPrint();</script>

@@ -247,4 +247,82 @@ describe('EventEmitter', () => {
 
   });//describe
 
+  describe('add/remove/getOnIntercepterFunc()', () => {
+    // know what event is registered by on method.
+
+    test('addOnIntercepterFunc', (done) => {
+
+      const eventEmitter = new EventEmitter();
+
+      const emitterCallbackFunc = (data) => {
+        expect(data.eventType).toBe('testEvent');
+        expect(data.testKey).toBe('testValue');
+      };
+
+      eventEmitter.addOnIntercepterFunc('test-intercepter', (funcInfo) => {
+        expect(funcInfo.eventType).toBe('testEvent');
+        expect(funcInfo.onIntercepterFuncname).toBe('test-intercepter');
+        expect(funcInfo.func).toStrictEqual(emitterCallbackFunc);
+        done();
+      });
+      eventEmitter.on('testEvent', emitterCallbackFunc);
+
+    });
+    test('getAllOnIntercepterFuncs', () => {
+
+      const eventEmitter = new EventEmitter();
+
+      const emitterCallbackFunc = (data) => {
+        expect(data.eventType).toBe('testEvent');
+        expect(data.testKey).toBe('testValue');
+      };
+
+      eventEmitter.addOnIntercepterFunc('test-intercepter', (funcInfo) => {
+        expect(funcInfo.eventType).toBe('testEvent');
+        expect(funcInfo.onIntercepterFuncname).toBe('test-intercepter');
+        expect(funcInfo.func).toStrictEqual(emitterCallbackFunc);
+
+      });
+      eventEmitter.on('testEvent', emitterCallbackFunc);
+
+      const funcs = eventEmitter.getAllOnIntercepterFuncs();
+
+      expect(funcs.length).toBe(1);
+      expect(funcs[0].funcName).toBe('test-intercepter');
+
+    });
+
+    test('removeOnIntercepterFunc', () => {
+
+      const eventEmitter = new EventEmitter();
+
+      const emitterCallbackFunc = (data) => {
+        expect(data.eventType).toBe('testEvent');
+        expect(data.testKey).toBe('testValue');
+      };
+
+      eventEmitter.addOnIntercepterFunc('test-intercepter', (funcInfo) => {
+        expect(funcInfo.eventType).toBe('testEvent');
+        expect(funcInfo.onIntercepterFuncname).toBe('test-intercepter');
+        expect(funcInfo.func).toStrictEqual(emitterCallbackFunc);
+
+      });
+      eventEmitter.on('testEvent', emitterCallbackFunc);
+
+      const funcs = eventEmitter.getAllOnIntercepterFuncs();
+
+      expect(funcs.length).toBe(1);
+      expect(funcs[0].funcName).toBe('test-intercepter');
+
+      eventEmitter.removeOnIntercepterFunc('test-intercepter');
+
+      const funcs2 = eventEmitter.getAllOnIntercepterFuncs();
+
+      expect(funcs2.length).toBe(0);
+
+
+    });
+
+
+  });
 });

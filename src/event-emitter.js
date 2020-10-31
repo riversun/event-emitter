@@ -29,8 +29,9 @@ export default class EventEmitter {
     }
 
     this.childEventEmitters = [];
-  }
 
+    this.onIntercepterFuncs = {};
+  }
 
   /**
    * Set eventType you want to receive and the listener function to be callbacked from #emit method
@@ -48,6 +49,16 @@ export default class EventEmitter {
       this.onListeners.set(eventType, listenerList);
     }
     listenerList.addListenerFunc(listenerFunc);
+
+    // notify callback functions adding listenerFunc for eventType by on method.
+    if (this.onIntercepterFuncs) {
+      for (let [key, value] of Object.entries(this.onIntercepterFuncs)) {
+        const onIntercepterFuncname = key;
+        const onIntercepterFunc = value;
+        onIntercepterFunc({ eventType, func: listenerFunc, onIntercepterFuncname });
+      }
+    }
+
   }
 
   /**
@@ -215,6 +226,40 @@ export default class EventEmitter {
 
     this.childEventEmitters = [];
   }
+
+
+  /**
+   * Add callback func(s) to notify when calling on() method.
+   * @param funcName
+   * @param func
+   */
+  addOnIntercepterFunc(funcName, func) {
+    if (this.onIntercepterFuncs[funcName]) {
+      throw Error(`Always registered intercepter func "${funcName}".`)
+    }
+    this.onIntercepterFuncs[funcName] = func;
+  }
+
+  /**
+   * Add callback func to notify when calling on() method.
+   * @param funcName
+   */
+  removeOnIntercepterFunc(funcName) {
+    delete this.onIntercepterFuncs[funcName];
+  }
+
+  /**
+   * Returns callback func and func name to notify when calling on() method.
+   */
+  getAllOnIntercepterFuncs() {
+    const resultArray = [];
+    for (let [key, value] of Object.entries(this.onIntercepterFuncs)) {
+      const onIntercepterFuncname = key;
+      const onIntercepterFunc = value;
+      resultArray.push({ funcName: onIntercepterFuncname, func: onIntercepterFunc });
+    }
+    return resultArray;
+  }
 }
 
 /**
@@ -271,6 +316,7 @@ export class EventListenerList {
   typeOf(obj) {
     return Object.prototype.toString.call(obj).slice(8, -1);
   }
+
 
 }
 

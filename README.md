@@ -54,7 +54,18 @@ If the same listenerName is set for listener, the old listener will be removed.
 npm test
 ```
 
-# API details
+## Classes
+
+<dl>
+<dt><a href="#EventListenerList">EventListenerList</a></dt>
+<dd><p>A sequential list containing event listeners(callback functions)</p>
+</dd>
+<dt><a href="#EventListenerMap">EventListenerMap</a></dt>
+<dd><p>Map that stores listeners(callback functions) with the specific key</p>
+</dd>
+</dl>
+
+## Functions
 
 <dl>
 <dt><a href="#on">on(eventType, listenerFunc)</a></dt>
@@ -89,6 +100,15 @@ When the specified emitter is received a callback, the specified emitter also em
 </dd>
 <dt><a href="#clearAll">clearAll()</a></dt>
 <dd><p>Clear all related listeners</p>
+</dd>
+<dt><a href="#addOnIntercepterFunc">addOnIntercepterFunc(funcName, func)</a></dt>
+<dd><p>Add callback func(s) to notify when calling on() method.</p>
+</dd>
+<dt><a href="#removeOnIntercepterFunc">removeOnIntercepterFunc(funcName)</a></dt>
+<dd><p>Add callback func to notify when calling on() method.</p>
+</dd>
+<dt><a href="#getAllOnIntercepterFuncs">getAllOnIntercepterFuncs()</a></dt>
+<dd><p>Returns callback func and func name to notify when calling on() method.</p>
 </dd>
 </dl>
 
@@ -182,5 +202,34 @@ Returns true if at least one ListenerFunction that receives the event specified 
 
 ## clearAll()
 Clear all related listeners
+
+**Kind**: global function  
+<a name="addOnIntercepterFunc"></a>
+
+## addOnIntercepterFunc(funcName, func)
+Add callback func(s) to notify when calling on() method.
+
+**Kind**: global function  
+
+| Param |
+| --- |
+| funcName | 
+| func | 
+
+<a name="removeOnIntercepterFunc"></a>
+
+## removeOnIntercepterFunc(funcName)
+Add callback func to notify when calling on() method.
+
+**Kind**: global function  
+
+| Param |
+| --- |
+| funcName | 
+
+<a name="getAllOnIntercepterFuncs"></a>
+
+## getAllOnIntercepterFuncs()
+Returns callback func and func name to notify when calling on() method.
 
 **Kind**: global function  

@@ -45,6 +45,15 @@ When the specified emitter is received a callback, the specified emitter also em
 <dt><a href="#clearAll">clearAll()</a></dt>
 <dd><p>Clear all related listeners</p>
 </dd>
+<dt><a href="#addOnIntercepterFunc">addOnIntercepterFunc(funcName, func)</a></dt>
+<dd><p>Add callback func(s) to notify when calling on() method.</p>
+</dd>
+<dt><a href="#removeOnIntercepterFunc">removeOnIntercepterFunc(funcName)</a></dt>
+<dd><p>Add callback func to notify when calling on() method.</p>
+</dd>
+<dt><a href="#getAllOnIntercepterFuncs">getAllOnIntercepterFuncs()</a></dt>
+<dd><p>Returns callback func and func name to notify when calling on() method.</p>
+</dd>
 </dl>
 
 <a name="on"></a>
@@ -137,5 +146,34 @@ Returns true if at least one ListenerFunction that receives the event specified 
 
 ## clearAll()
 Clear all related listeners
+
+**Kind**: global function  
+<a name="addOnIntercepterFunc"></a>
+
+## addOnIntercepterFunc(funcName, func)
+Add callback func(s) to notify when calling on() method.
+
+**Kind**: global function  
+
+| Param |
+| --- |
+| funcName | 
+| func | 
+
+<a name="removeOnIntercepterFunc"></a>
+
+## removeOnIntercepterFunc(funcName)
+Add callback func to notify when calling on() method.
+
+**Kind**: global function  
+
+| Param |
+| --- |
+| funcName | 
+
+<a name="getAllOnIntercepterFuncs"></a>
+
+## getAllOnIntercepterFuncs()
+Returns callback func and func name to notify when calling on() method.
 
 **Kind**: global function  
