@@ -293,10 +293,10 @@ export class EventListenerList {
 
   callListenerFunc(data) {
     for (const listenerFunc of this.listenerFuncs) {
-      if (this.typeOf(listenerFunc) === 'Function') {
+      if (this.typeOf(listenerFunc) === 'Function' || this.typeOf(listenerFunc) === 'AsyncFunction') {
         listenerFunc(data);
       } else {
-        throw Error(`[@riversun/event-emitter] listenerFunction you set is not a function. listenerFunction:"${listenerFunc}".Check args of #only method or #on method.`);
+        throw Error(`[@riversun/event-emitter] listenerFunction you set is not a function ( is type of A "${this.typeOf(listenerFunc)}" ). listenerFunction:"${listenerFunc}".Check args of #only method or #on method.`);
       }
     }
   }

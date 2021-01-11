@@ -24,6 +24,17 @@ describe('EventEmitter', () => {
       eventEmitter.emit('testEvent', { testKey: 'testValue' });
     });
 
+    test('Set async callback func by on() and emit().', () => {
+
+      const eventEmitter = new EventEmitter();
+
+      eventEmitter.on('testEvent', async (data) => {
+        expect(data.eventType).toBe('testEvent');
+        expect(data.testKey).toBe('testValue');
+      });
+
+      eventEmitter.emit('testEvent', { testKey: 'testValue' });
+    });
 
     test('Set multiple callback funcs by on() and emit().', () => {
 
