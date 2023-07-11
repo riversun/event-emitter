@@ -12,6 +12,9 @@
 ## Functions
 
 <dl>
+<dt><a href="#onAny">onAny(listenerFunc)</a></dt>
+<dd><p>Set listener that can receive whichever event fires</p>
+</dd>
 <dt><a href="#on">on(eventType, listenerFunc)</a></dt>
 <dd><p>Set eventType you want to receive and the listener function to be callbacked from #emit method
  (This eventType will never fire unless called with emit)</p>
@@ -55,6 +58,17 @@ When the specified emitter is received a callback, the specified emitter also em
 <dd><p>Returns callback func and func name to notify when calling on() method.</p>
 </dd>
 </dl>
+
+<a name="onAny"></a>
+
+## onAny(listenerFunc)
+Set listener that can receive whichever event fires
+
+**Kind**: global function  
+
+| Param |
+| --- |
+| listenerFunc | 
 
 <a name="on"></a>
 

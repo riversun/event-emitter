@@ -19,6 +19,9 @@ export default class EventEmitter {
     // value:EventListenerMap
     this.onlyListeners = new Map();
 
+    // listenerList for onAny
+    this.onAnyListener = null;
+
 
     //prepare listenerLists related to the eventType
     if (eventTypes) {
@@ -31,6 +34,17 @@ export default class EventEmitter {
     this.childEventEmitters = [];
 
     this.onIntercepterFuncs = {};
+  }
+
+  /**
+   * Set listener that can receive whichever event fires
+   * @param listenerFunc
+   */
+  onAny(listenerFunc){
+    if(!this.onAnyListener){
+      this.onAnyListener = new EventListenerList();
+    }
+    this.onAnyListener.addListenerFunc(listenerFunc);
   }
 
   /**
@@ -131,6 +145,13 @@ export default class EventEmitter {
       listenerMap.callListenerFunc(data);
     }
 
+    // fire "any" listener
+    // Add "eventType" into data
+    if(this.onAnyListener) {
+      data.eventType = eventType;
+      this.onAnyListener.callListenerFunc(data);
+    }
+
     for (const childEventEmitter of this.childEventEmitters) {
       childEventEmitter.emit(eventType, data);
     }
@@ -225,6 +246,8 @@ export default class EventEmitter {
 
 
     this.childEventEmitters = [];
+
+    this.onAnyListener=null;
   }
 
 

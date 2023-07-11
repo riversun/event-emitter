@@ -336,4 +336,34 @@ describe('EventEmitter', () => {
 
 
   });
+
+
+  describe('onAny()', () => {
+
+    test('onAny', () => {
+
+      const eventEmitter = new EventEmitter();
+
+      const list=[];
+      eventEmitter.onAny(data => {
+        list.push(data);
+
+        if(list.length==1){
+        expect(list[0].eventType).toBe('testEvent1');
+        expect(list[0].testKey).toBe('testValue1');
+        }
+        if(list.length==2){
+          expect(list[1].eventType).toBe('testEvent2');
+          expect(list[1].testKey).toBe('testValue2');
+        }
+      });
+
+
+
+      eventEmitter.emit('testEvent1', {testKey: 'testValue1'});
+      eventEmitter.emit('testEvent2', {testKey: 'testValue2'});
+
+      expect(list.length).toBe(2);
+    });
+  });
 });

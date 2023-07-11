@@ -48,6 +48,17 @@ only() method can limit the event listener function that receives events to only
 Only one listener is registered per "listenerName" even if called multiple times.
 If the same listenerName is set for listener, the old listener will be removed.
 
+## onAny() method
+
+```javascript
+eventEmitter.onAny(data => {});
+eventEmitter.emit('testEvent1', {testKey: 'testValue1'});
+eventEmitter.emit('testEvent2', {testKey: 'testValue2'});
+```
+
+Set onAny to catch all events that occur.
+
+
 # run tests
 
 ```
